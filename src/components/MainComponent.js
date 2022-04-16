@@ -37,6 +37,15 @@ class Main extends Component {
       );
     }
 
+    //when you have a number thats been stored as a string & you want to convert to a number use +"NumberAsString" (ie: +"300")
+    const CampsiteWithId = ({match}) => {
+      return (
+        <CampsiteInfo 
+          campsite={this.state.campsites.filter(campsite => campsite.id === +match.params.campsiteId)[0]}
+          comments={this.state.comments.filter(comment => comment.campsiteId === +match.params.campsiteId)} 
+        />
+      );
+    }
 
     return (
       <div>
@@ -44,6 +53,7 @@ class Main extends Component {
         <Switch>
           <Route path='/home' component={HomePage} />
           <Route exact path='/directory' render={() => <Directory campsites={this.state.campsites} />} />
+          <Route path='/directory/:campsiteId' component={CampsiteWithId} />
           <Route exact path='/contactus' component={Contact} />
           <Redirect to="/home" />
         </Switch>
@@ -60,6 +70,8 @@ class Main extends Component {
 
 //the second <Route> will also have a path and a boolean attribute named exact to match that exact path(directory), the render function returns the directory component
 //if you need to pass state data as props to the component that you're routing to, use the render syntax (like for directory)
+
+//the ':' in the 3rd <Route> tells the router that what follows the forward slash is going to be a parameter, takes whatever that is and puts it inside the property campsiteID
 
 //the <Redirect> component acts like a catch-all such as the default statement in a JS switch statement
 //any routing request that comes through will go through this switch component until it finds a matching route. if there are none, it will end up at the redirect component which will send them to whatever path is there (in this case is home).
