@@ -8,6 +8,7 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators';
 
 //get the state from redux by setting up the mapStateToProps()
 //change everything in the main component that had this.state to this.props
@@ -19,6 +20,10 @@ const mapStateToProps = state => {
     promotions: state.promotions
   }
 }
+
+const mapDispatchToProps = {
+  addComment: (campsiteId, rating, author, text) => (addComment(campsiteId, rating, author, text))
+};
 
 //container component
 class Main extends Component {
@@ -42,6 +47,7 @@ class Main extends Component {
         <CampsiteInfo 
           campsite={this.props.campsites.filter(campsite => campsite.id === +match.params.campsiteId)[0]}
           comments={this.props.comments.filter(comment => comment.campsiteId === +match.params.campsiteId)} 
+          addComment={this.props.addComment}
         />
       );
     }
@@ -78,4 +84,4 @@ class Main extends Component {
 
 //allows the main component to take state from the redux store
 //withRouter will allow react router to work with redux
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

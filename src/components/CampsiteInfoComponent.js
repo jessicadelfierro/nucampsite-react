@@ -11,13 +11,7 @@ class CommentForm extends Component {
         super(props);
 
         this.state = {
-            isModalOpen: false,
-            author: '',
-            text: '',
-            touched: {
-                author: false,
-                text: false
-            }
+            isModalOpen: false
         };
 
         this.toggleModal = this.toggleModal.bind(this);
@@ -31,7 +25,8 @@ class CommentForm extends Component {
     }
 
     handleSubmit(values) {
-        alert("Comment is: " + JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
     }
 
     render() {
@@ -47,17 +42,18 @@ class CommentForm extends Component {
                                 <Control.select model=".rating" id="rating" name="rating"
                                     className="form-control"
                                 >
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
                                 </Control.select>
                             </div>
 
                             <div className="form-group">
                                 <Label htmlFor="author">Author</Label>
                                 <Control.text model=".author" id="author" name="author" 
+                                    placeholder="Your name"
                                     className="form-control"
                                     validators={{
                                         minLength: minLength(2),
@@ -83,11 +79,9 @@ class CommentForm extends Component {
                                 />
                             </div>
 
-                            <div className="form-group">
-                                <Button type="submit" color="primary">
-                                    Submit
-                                </Button>
-                            </div>
+                            <Button type="submit" color="primary">
+                                Submit
+                            </Button>
                         </LocalForm>
                     </ModalBody>
                 </Modal>
@@ -109,7 +103,7 @@ function RenderCampsite({campsite}) {
     );
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments, addComment, campsiteId}) {
     if (comments) {
         return(
             <div className="col-md-5 m-1">
@@ -123,7 +117,7 @@ function RenderComments({comments}) {
                         </div>
                     );
                 })}
-                <CommentForm />
+                <CommentForm campsiteId={campsiteId} addComment={addComment} />
             </div>
         );
     }
@@ -146,7 +140,11 @@ function CampsiteInfo(props) {
                 </div>
                 <div className="row">
                     <RenderCampsite campsite={props.campsite} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments 
+                        comments={props.comments}
+                        addComment={props.addComment}
+                        campsiteId={props.campsite.id}
+                    />
                 </div>
             </div>
         );
